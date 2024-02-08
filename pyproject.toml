@@ -35,7 +35,7 @@ addopts = "-v -x -ra -q --cov --doctest-modules"
 testpaths = ["src","tests"]
 filterwarnings = ["ignore::DeprecationWarning"]
 
-[tool.ruff]
+[tool.ruff.lint]
 ignore = ["F401", "F403"]
 fixable = ["F", "E", "W", "I001"]
 select = ["F", "E", "W", "I001"]
