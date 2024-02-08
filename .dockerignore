@@ -1,0 +1,11 @@
+.env
+temp
+docs
+notebooks
+.editorconfig
+env.example
+nb.ipynb
+pyproject.toml
+.pre-commit.config.yaml
+README.md
+justfile

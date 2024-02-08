@@ -1,0 +1,53 @@
+name: Build
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install Dependencies
+        run: |
+          pip install pre-commit
+          pre-commit install-hooks
+      - name: Lint with pre-commit
+        run: pre-commit run --all-files
+  test:
+    needs: lint
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.12']
+    steps:
+      # see https://github.com/madmaze/pytesseract/blob/master/.github/workflows/ci.yaml
+      - name: Install tesseract
+        run: sudo apt-get -y update && sudo apt-get install -y tesseract-ocr tesseract-ocr-fra
+      - name: Print tesseract version
+        run: echo $(tesseract --version)
+
+      # see https://github.com/jsvine/pdfplumber/blob/stable/.github/workflows/tests.yml
+      - name: Install ghostscript & imagemagick
+        run: sudo apt update && sudo apt install ghostscript libmagickwand-dev
+      - name: Remove policy.xml
+        run: sudo rm /etc/ImageMagick-6/policy.xml
+
+      # start test proper
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install Python Dependencies
+        run: python -m pip install --editable '.[dev]'
+      - name: Test with Pytest
+        run: pytest
+
