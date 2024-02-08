@@ -1,3 +1,5 @@
+set dotenv-load
+
 # create .venv
 start:
   python -m venv .venv && \
@@ -14,5 +16,4 @@ dumpenv:
 
 # upload to pypi
 publish:
-  python -m build && \
   python -m twine upload dist/* -u __token__ -p $PYPI_TOKEN
