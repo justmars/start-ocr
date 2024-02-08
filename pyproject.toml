@@ -24,6 +24,8 @@ dev = [
   "mkdocstrings [python] >= 0.22",
   "mkdocs-material >= 9.5",
   "ipykernel >= 6.23",
+  "build >= 1.0.3",
+  "twine >= 4.0.2",
 ]
 
 [tool.pytest.ini_options]

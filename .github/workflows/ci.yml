@@ -50,4 +50,3 @@ jobs:
         run: python -m pip install --editable '.[dev]'
       - name: Test with Pytest
         run: pytest
-
