@@ -18,8 +18,9 @@ def remove_vertical_lines(im: np.ndarray):
     remove_vertical = cv2.morphologyEx(
         thresh, cv2.MORPH_OPEN, vertical_kernel, iterations=2
     )
-    cnts = cv2.findContours(remove_vertical, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    cnts = cnts[0] if len(cnts) == 2 else cnts[1]
+    cnts, _ = cv2.findContours(
+        remove_vertical, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE
+    )
     for c in cnts:
         cv2.drawContours(im, [c], -1, (255, 255, 255), 5)
     cv2.imwrite("temp/sample.png", im)
@@ -89,7 +90,7 @@ def get_page_and_img(pdfpath: str | Path, index: int) -> tuple[Page, np.ndarray]
     Returns:
         tuple[Page, np.ndarray]: Page identified by `index`  with image of the
             page  (in np format) that can be manipulated.
-    """  # noqa: E501
+    """
     with pdfplumber.open(pdfpath) as pdf:
         page = pdf.pages[index]
         img = get_img_from_page(page)
@@ -116,13 +117,10 @@ def get_pages_and_imgs(
 
     Yields:
         Iterator[tuple[Page, np.ndarray]]: Pages with respective images
-    """  # noqa: E501
+    """
     with pdfplumber.open(pdfpath) as pdf:
-        index = 0
-        while index < len(pdf.pages):
-            page = pdf.pages[index]
+        for page in pdf.pages:
             yield page, get_img_from_page(page)
-            index += 1
 
 
 def get_reverse_pages_and_imgs(
@@ -147,10 +145,7 @@ def get_reverse_pages_and_imgs(
 
     Yields:
         Iterator[tuple[Page, np.ndarray]]: Pages with respective images
-    """  # noqa: E501
+    """
     with pdfplumber.open(pdfpath) as pdf:
-        index = len(pdf.pages) - 1
-        while index >= 0:
-            page = pdf.pages[index]
+        for page in reversed(pdf.pages):
             yield page, get_img_from_page(page)
-            index -= 1

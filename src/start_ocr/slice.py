@@ -35,7 +35,7 @@ def get_contours(
     rectangle_size: tuple[int, int],
     test_dilation: bool = False,
     test_dilated_image: str | None = "temp/dilated.png",
-) -> list:
+) -> list[cv2.typing.MatLike]:
     """Using tiny `rectangle_size` of the format `(width, height)`, create a dilated version
     of the image `im`. The contours found are outputed by this function.
 
@@ -59,7 +59,7 @@ def get_contours(
     Returns:
         list: The contours found based on the specified structuring element
 
-    """  # noqa: E501
+    """
     gray = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)
     blur = cv2.GaussianBlur(gray, (7, 7), 0)
     thresh = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
@@ -67,8 +67,7 @@ def get_contours(
     dilate = cv2.dilate(thresh, kernel, iterations=1)
     if test_dilation and test_dilated_image:
         cv2.imwrite(test_dilated_image, dilate)
-    cnts = cv2.findContours(dilate, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    cnts = cnts[0] if len(cnts) == 2 else cnts[1]
+    cnts, _ = cv2.findContours(dilate, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     return sorted(cnts, key=lambda x: cv2.boundingRect(x)[1])
 
 
@@ -97,7 +96,7 @@ def get_likelihood_centered_coordinates(
     Returns:
         tuple[int, int, int, int] | None: (x, y, w, h) pixels representing
             `cv2.boundingRect`, if found.
-    """  # noqa: E501
+    """
     _, im_w, _ = im.shape
     for cnt in get_contours(im, (50, 50)):
         x, y, w, h = cv2.boundingRect(cnt)
@@ -105,8 +104,6 @@ def get_likelihood_centered_coordinates(
         endpoint_on_right = x + w > im_w / 2
         short_width = w > 200
         if all([x0_mid_left, endpoint_on_right, short_width]):
-            # cv2.rectangle(im, (x, y), (x + w, y + h), (36, 255, 12), 3)
-            # cv2.imwrite("temp/sample_boxes.png", im)
             if is_match_text(
                 sliced_im=im[y : y + h, x : x + w],
                 text_to_match=text_to_match,
@@ -156,7 +153,7 @@ class PageCut(NamedTuple):
 
         Returns:
             CroppedPage: The page crop where to extract text from.
-        """  # noqa: E501
+        """
         box: T_bbox = (self.x0, self.y0, self.x1, self.y1)
         return self.page.crop(box, relative=False, strict=True)
 
@@ -185,7 +182,7 @@ class PageCut(NamedTuple):
 
         Returns:
             CroppedPage: The page crop where to extract text from.
-        """  # noqa: E501
+        """
         SIDE_MARGIN = 50
         x0, x1 = SIDE_MARGIN, page.width - SIDE_MARGIN
         cut = cls(page=page, x0=x0, x1=x1, y0=y0, y1=y1)

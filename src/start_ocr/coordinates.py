@@ -4,7 +4,7 @@ import cv2
 from numpy import ndarray
 
 GREEN = (36, 255, 12)
-PURPLE = (255, 0, 0)
+RED = (255, 0, 0)  # BGR tuple; renders blue on the BGR images used here
 
 
 class CoordinatedImage(NamedTuple):
@@ -25,7 +25,7 @@ class CoordinatedImage(NamedTuple):
     --:|:--:|:--
     `x1` | `x + w` | x-axis position marking the end of the filtered item
     `y1` | `y + h` | y-axis position marking the end of the filtered item
-    """  # noqa: E501
+    """
 
     im: ndarray
     x: float
@@ -76,13 +76,13 @@ class CoordinatedImage(NamedTuple):
         )
 
     def redbox(self):
-        """Add a "green box" to the image where the box area is represented by the
+        """Add a "red box" to the image where the box area is represented by the
         diagonal of pt1 and pt2: pt1 being the upper left point and pt2 being
         the lower right point of the rectangle."""
         return cv2.rectangle(
             img=self.im,
             pt1=self.upper_left_point,
             pt2=self.lower_right_point,
-            color=PURPLE,
+            color=RED,
             thickness=1,
         )

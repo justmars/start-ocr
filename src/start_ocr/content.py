@@ -1,4 +1,3 @@
-import logging
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Self
@@ -30,7 +29,7 @@ class Content:
     `segments` | Segments of the `body`'s text in the given `page_num`
     `annex` | Portion of page containing the footnotes; some pages are annex-free
     `footnotes` | Each footnote item in the `annex`'s text in the given `page_num`
-    """  # noqa: E501
+    """
 
     page_num: int
     body: CroppedPage
@@ -74,7 +73,7 @@ class Content:
 
         Returns:
             Self: Page with individual components mapped out.
-        """  # noqa: E501
+        """
         im = get_img_from_page(page)
 
         header_line = start_y or get_header_line(im, page)
@@ -140,14 +139,10 @@ class Collection:
             return content
 
     @classmethod
-    def is_ok(cls, candidate: Page, min_char_length: int = 10):
+    def is_ok(cls, candidate: Page, min_char_length: int = 10) -> bool:
         """A convenience function to check if the page contains text."""
-
-        if text := candidate.extract_text_simple():
-            if chars := len(text.strip()):
-                if chars >= min_char_length:
-                    return True
-        return False
+        text = (candidate.extract_text_simple() or "").strip()
+        return bool(text) and len(text) >= min_char_length
 
     @classmethod
     def make(cls, path: Path, preliminary_page: Content) -> Self:
@@ -164,8 +159,7 @@ class Collection:
 
     def add(self, next_pages: list[Page]):
         for page in next_pages:
-            if page_valid := Content.set(page=page):
-                self.pages.append(page_valid)
+            self.pages.append(Content.set(page=page))
         self.join_segments()
         self.join_annexes()
 

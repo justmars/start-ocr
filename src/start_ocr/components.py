@@ -41,16 +41,14 @@ class Bodyline(NamedTuple):
         Returns:
             list[Self]: Bodylines of segmented text
         """
-        lines = []
-        for order_num, par in enumerate(prelim_lines, start=1):
-            obj = cls(
+        return [
+            cls(
                 page_num=page_num,
                 order_num=order_num,
                 line=line_break.sub(" ", par).strip(),
             )
-            lines.append(obj)
-        lines.sort(key=lambda obj: obj.order_num)
-        return lines
+            for order_num, par in enumerate(prelim_lines, start=1)
+        ]
 
 
 class Footnote(NamedTuple):
@@ -142,7 +140,7 @@ def get_header_upper_right(
 
     Returns:
         tuple[int, int, int, int] | None: The coordinates of the docket, if found.
-    """  # noqa: E501
+    """
     im_h, im_w, _ = im.shape
     for cnt in get_contours(im, (50, 50)):
         x, y, w, h = cv2.boundingRect(cnt)
@@ -172,7 +170,7 @@ def get_header_line(im: np.ndarray, page: Page) -> int | float | None:
 
     Returns:
         float | None: Y-axis point (pdfplumber point) at bottom of header
-    """  # noqa: E501
+    """
     im_h, im_w, _ = im.shape
     if hd := get_header_upper_right(im):
         _, y, _, h = hd
@@ -241,7 +239,7 @@ def page_width_lines(im: np.ndarray) -> list[CoordinatedImage]:
         >>> res = page_width_lines(im)
         >>> len(res) # only one image matches the filter
         3
-    """  # noqa: E501
+    """
     _, im_w, _ = im.shape
     results = []
     contours = get_contours(
@@ -288,7 +286,7 @@ def footnote_lines(im: np.ndarray) -> list[CoordinatedImage]:
         >>> len(res) # only one image matches the filter
         1
 
-    """  # noqa: E501
+    """
     _, im_w, _ = im.shape
     contours = get_contours(
         im=im,
@@ -339,7 +337,7 @@ def get_page_end(im: np.ndarray, page: Page) -> tuple[float, float | None]:
 
     Returns:
         tuple[float, float | None]: Annex line's y-axis (if it exists) and the page's end content line.
-    """  # noqa: E501
+    """
     y1 = PERCENT_OF_MAX_PAGE * page.height
     im_h, _, _ = im.shape
     if lines := footnote_lines(im):

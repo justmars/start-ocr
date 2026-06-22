@@ -37,6 +37,6 @@ filterwarnings = ["ignore::DeprecationWarning"]
 line-length = 88
 
 [tool.ruff.lint]
-ignore = ["F401", "F403", "E501"]
+ignore = ["E501"]  # line length is owned by ruff-format
 fixable = ["F", "E", "W", "I001"]
 select = ["E", "F", "W", "I", "C"]

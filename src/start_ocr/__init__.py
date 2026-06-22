@@ -23,3 +23,26 @@ from .slice import (
     get_likelihood_centered_coordinates,
     is_match_text,
 )
+
+__all__ = [
+    "Bodyline",
+    "Footnote",
+    "footnote_lines",
+    "get_header_line",
+    "get_header_upper_right",
+    "get_page_end",
+    "get_page_num",
+    "page_width_lines",
+    "Collection",
+    "Content",
+    "CoordinatedImage",
+    "show_contours",
+    "get_img_from_page",
+    "get_page_and_img",
+    "get_pages_and_imgs",
+    "get_reverse_pages_and_imgs",
+    "PageCut",
+    "get_contours",
+    "get_likelihood_centered_coordinates",
+    "is_match_text",
+]
