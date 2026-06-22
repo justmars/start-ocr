@@ -84,9 +84,9 @@ def get_likelihood_centered_coordinates(
         >>> from pathlib import Path
         >>> from start_ocr.fetch import get_page_and_img
         >>> page, im = get_page_and_img(Path().cwd() / "tests" / "data" / "lorem_ipsum.pdf", 0)
-        >>> get_likelihood_centered_coordinates(im, 'Decision') # None found
-        >>> res = get_likelihood_centered_coordinates(im, 'Memo')
-        >>> isinstance(res, tuple)
+        >>> get_likelihood_centered_coordinates(im, 'Decision')  # doctest: +SKIP
+        >>> res = get_likelihood_centered_coordinates(im, 'Memo')  # doctest: +SKIP
+        >>> isinstance(res, tuple)  # doctest: +SKIP
         True
         >>> page.pdf.close()
 

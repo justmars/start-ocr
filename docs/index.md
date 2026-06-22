@@ -1,23 +1,5 @@
 # start-ocr Docs
 
-!!! warning "Caveat"
-
-    _ImageMagick_ [setups](./setup.md) vary:
-
-    1. `homebrew`-based installation
-    2. `Dockerfile` compiles from source
-    3. Github action `main.yml`
-
-    This makes some tests janky so have to be a bit creative, e.g.:
-
-    ```py title="Sample docstring"
-    >>> contours = get_contours(im, (10,10))
-    >>> len(contours) in [222,223] # So one installation outputs 222 and the other 223
-    True
-    ```
-
-    Ideally, this would consistent. Will have to circle back on this another time.
-
 ## Sample PDF
 
 A simple file is included in the `/tests` folder to demonstrate certain functions:

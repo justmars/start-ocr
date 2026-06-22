@@ -1,19 +1,29 @@
 set dotenv-load
 
-# create .venv
-start:
-  python -m venv .venv && \
-  source .venv/bin/activate && \
-  python -m pip install -U pip && \
-  python -m pip install -U \
-    --editable '.[dev]' \
-    --require-virtualenv \
-    --verbose
+# install dependencies
+install:
+  uv sync
 
 # create .env file from example
 dumpenv:
   op inject -i env.example -o .env
 
+# serve documentation
+docs:
+  uv run zensical serve --dev-addr localhost:8001
+
+# run tests
+test:
+  uv run pytest
+
+# run routine checks
+check: test
+  uv run zensical build
+
+# build distribution artifacts
+build:
+  uv build
+
 # upload to pypi
 publish:
-  python -m twine upload dist/* -u __token__ -p $PYPI_TOKEN
+  uv run twine upload dist/* -u __token__ -p $PYPI_TOKEN
